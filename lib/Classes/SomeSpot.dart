@@ -1,10 +1,7 @@
-
-
 import 'package:geocoding/geocoding.dart';
 
-class SomeSpot{
+class SomeSpot {
   String? name;
-  String ? adress;
+  String? adress;
   Location? latlong;
-
 }

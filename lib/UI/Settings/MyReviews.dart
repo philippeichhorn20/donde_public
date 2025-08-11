@@ -1,6 +1,6 @@
 import 'package:donde/BackendFunctions/ReviewFunctions.dart';
-import 'package:donde/UI/BasicUIElements/ListTiles.dart';
 import 'package:donde/Classes/Review.dart';
+import 'package:donde/UI/BasicUIElements/ListTiles.dart';
 import 'package:donde/UITemplates.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +18,7 @@ class _MyReviewsState extends State<MyReviews> {
     super.initState();
     myReviews();
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,28 +29,26 @@ class _MyReviewsState extends State<MyReviews> {
           child: PageView.builder(
             itemCount: reviews.length,
             itemBuilder: (context, index) {
-              if(reviews.length > index+1){
-                ReviewFunctions.getReviewPic(reviews[index+1]);
+              if (reviews.length > index + 1) {
+                ReviewFunctions.getReviewPic(reviews[index + 1]);
               }
               return Padding(
-                padding: const EdgeInsets.only(top:30.0),
-                child: ListTiles.reviewListTile(reviews[index], context, setState),
+                padding: const EdgeInsets.only(top: 30.0),
+                child:
+                    ListTiles.reviewListTile(reviews[index], context, setState),
               );
             },
             scrollDirection: Axis.horizontal,
-
           ),
         ),
       ),
-
     );
   }
 
-  Future<void> myReviews()async{
+  Future<void> myReviews() async {
     reviews = await ReviewFunctions.getMyReviews();
     setState(() {
       reviews = reviews;
     });
   }
-
 }

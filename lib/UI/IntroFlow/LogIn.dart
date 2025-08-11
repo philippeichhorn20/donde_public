@@ -1,13 +1,10 @@
 import 'package:donde/BackendFunctions/SignUpFunctions.dart';
 import 'package:donde/UI/IntroFlow/LocationPermissionView.dart';
-import 'package:donde/UI/MainViews/HomePage.dart';
-import 'package:donde/UI/MainViews/Skeleton.dart';
 import 'package:donde/UITemplates.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LogIn extends StatefulWidget {
   @override
@@ -35,7 +32,6 @@ class _LogInState extends State<LogIn> {
                   padding: const EdgeInsets.all(8.0),
                   child: TextField(
                     cursorColor: Colors.black,
-
                     autofocus: true,
                     controller: numberControl,
                     style: UITemplates.importantTextStyle,
@@ -55,7 +51,6 @@ class _LogInState extends State<LogIn> {
                   padding: const EdgeInsets.all(8.0),
                   child: TextField(
                     cursorColor: Colors.black,
-
                     controller: passwordControl,
                     style: UITemplates.importantTextStyle,
                     obscureText: true,
@@ -81,11 +76,7 @@ class _LogInState extends State<LogIn> {
                   ),
                   style: UITemplates.buttonStyle,
                   onPressed: () async {
-                    OneSignal.shared
-                        .promptUserForPushNotificationPermission()
-                        .then((accepted) {
-                    });
-
+                    OneSignal.Notifications.requestPermission(true);
 
                     String s = await logInCorrect();
                     if (s == "") {

@@ -1,22 +1,12 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
-import 'package:donde/BackendFunctions/ReviewFunctions.dart';
-import 'package:donde/Classes/Review.dart';
-import 'package:donde/UI/ReviewFlow/DoesSpotExistView.dart';
-import 'package:donde/UI/MainViews/HomePage.dart';
-import 'package:donde/UI/MainViews/SpotView.dart';
 import 'package:donde/Store.dart';
-
 import 'package:donde/UI/ReviewFlow/ReviewDetailsView.dart';
 import 'package:donde/UITemplates.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'dart:io' as Io;
-import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:volume_controller/volume_controller.dart';
 
@@ -50,22 +40,22 @@ class _AddReviewState extends State<AddReview> {
   late var size;
   late var deviceRatio;
   late var scale;
+
   @override
   initState() {
     super.initState();
     _future = cameraSetUp();
     myFocusNode = FocusNode();
 
-
-    VolumeController().listener((p0) async{
-    if(Store.pers_controller!= null && Store.pers_controller!.index == 1){
-      if(pic == null){
-        await takePictureandResize();
-        setState(() {
-          pic = pic;
-        });
+    VolumeController().listener((p0) async {
+      if (Store.pers_controller != null && Store.pers_controller!.index == 1) {
+        if (pic == null) {
+          await takePictureandResize();
+          setState(() {
+            pic = pic;
+          });
+        }
       }
-    }
     });
   }
 
@@ -83,8 +73,11 @@ class _AddReviewState extends State<AddReview> {
                 height: 70,
               ),
               Padding(
-                padding: const EdgeInsets.only(left:8.0),
-                child: Text("Make a picture of the spot you want to rate", style: UITemplates.descriptionStyle,),
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text(
+                  "Make a picture of the spot you want to rate",
+                  style: UITemplates.descriptionStyle,
+                ),
               ),
               SizedBox(
                 height: 10,
@@ -98,30 +91,40 @@ class _AddReviewState extends State<AddReview> {
                       child: Container(
                         alignment: Alignment.topLeft,
                         width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.width*450/350,
+                        height: MediaQuery.of(context).size.width * 450 / 350,
                         child: ClipRRect(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                           child: Container(
                             child: Stack(
                               fit: StackFit.expand,
-                            //  alignment: Alignment.center,
+                              //  alignment: Alignment.center,
                               children: [
                                 if (pic == null)
                                   Positioned(
-                                    top:0,
-                                    left:0,
+                                    top: 0,
+                                    left: 0,
                                     child: Container(
                                       width: MediaQuery.of(context).size.width,
-                                      height: MediaQuery.of(context).size.width*450/350,
+                                      height:
+                                          MediaQuery.of(context).size.width *
+                                              450 /
+                                              350,
                                       child: Transform.scale(
-                                        scale: camController!.value.previewSize!.width/350/2/4,
+                                        scale: camController!
+                                                .value.previewSize!.width /
+                                            350 /
+                                            2 /
+                                            4,
                                         child: FittedBox(
                                           fit: BoxFit.cover,
                                           child: SizedBox(
-                                            height: camController!.value.previewSize!.height,
-                                            width: camController!.value.previewSize!.width,
+                                            height: camController!
+                                                .value.previewSize!.height,
+                                            width: camController!
+                                                .value.previewSize!.width,
                                             child: Center(
-                                              child: CameraPreview(camController!),
+                                              child:
+                                                  CameraPreview(camController!),
                                             ),
                                           ),
                                         ),
@@ -129,52 +132,60 @@ class _AddReviewState extends State<AddReview> {
                                     ),
                                   ),
                                 if (pic != null)
-                                  Image.file(File(pic!.path),
-                                      fit: BoxFit.fitWidth,width: 350,),
-                                if(pic != null)
-                                Positioned(
-                                  top: 10,
-                                  right: 10,
-                                  child: TextButton(
-                                    style:  TextButton.styleFrom(
-                                      splashFactory: NoSplash.splashFactory,
-                                      foregroundColor: Colors.transparent,
-                                    ),
-                                    onPressed: ()  {
-                                      setState(() {
-                                        pic = null;
-                                      });
-                                    },
-                                    child: Icon(
-                                      Icons.close,
-                                      color: Colors.white,
-                                      size: 35,
-                                      grade: 100,
-                                      semanticLabel: "Delete",
-                                      weight: 100,
+                                  Image.file(
+                                    File(pic!.path),
+                                    fit: BoxFit.fitWidth,
+                                    width: 350,
+                                  ),
+                                if (pic != null)
+                                  Positioned(
+                                    top: 10,
+                                    right: 10,
+                                    child: TextButton(
+                                      style: TextButton.styleFrom(
+                                        splashFactory: NoSplash.splashFactory,
+                                        foregroundColor: Colors.transparent,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          pic = null;
+                                        });
+                                      },
+                                      child: Icon(
+                                        Icons.close,
+                                        color: Colors.white,
+                                        size: 35,
+                                        grade: 100,
+                                        semanticLabel: "Delete",
+                                        weight: 100,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                if(pic == null)
+                                if (pic == null)
                                   Positioned(
                                     top: 10,
                                     left: 10,
                                     child: TextButton(
-                                      style:  TextButton.styleFrom(
+                                      style: TextButton.styleFrom(
                                         splashFactory: NoSplash.splashFactory,
                                         foregroundColor: Colors.transparent,
                                         backgroundColor: Colors.grey[700],
-                                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                        tapTargetSize:
+                                            MaterialTapTargetSize.shrinkWrap,
                                         padding: EdgeInsets.zero,
                                       ),
-                                      onPressed: ()  {
+                                      onPressed: () {
                                         setState(() {
-                                          camController!.setFlashMode(flashOff?FlashMode.always:FlashMode.off);
+                                          camController!.setFlashMode(flashOff
+                                              ? FlashMode.always
+                                              : FlashMode.off);
                                           flashOff = !flashOff;
                                         });
                                       },
                                       child: Icon(
-                                        flashOff?Icons.flash_off:Icons.flash_on,
+                                        flashOff
+                                            ? Icons.flash_off
+                                            : Icons.flash_on,
                                         color: Colors.white,
                                         size: 25,
                                         grade: 100,
@@ -197,83 +208,84 @@ class _AddReviewState extends State<AddReview> {
                 alignment: Alignment.centerLeft,
                 padding: EdgeInsets.only(left: 10),
                 child: ElevatedButton(
-
-                  style:  ElevatedButton.styleFrom(
-                    splashFactory: NoSplash.splashFactory,
-                    foregroundColor: Colors.transparent,
-                    backgroundColor: Colors.black,
-                    elevation: 5
-                  ),
+                  style: ElevatedButton.styleFrom(
+                      splashFactory: NoSplash.splashFactory,
+                      foregroundColor: Colors.transparent,
+                      backgroundColor: Colors.black,
+                      elevation: 5),
                   onPressed: () async {
-                    File? xfile =
-                    await picImageFromLibrary();
+                    File? xfile = await picImageFromLibrary();
                     setState(() {
                       if (xfile != null) {
                         pic = File(xfile.path);
                       }
                     });
                   },
-                  child: Text("Pick photo from library", style: UITemplates.settingsTextStyle,textAlign: TextAlign.start),
+                  child: Text("Pick photo from library",
+                      style: UITemplates.settingsTextStyle,
+                      textAlign: TextAlign.start),
                 ),
               ),
-              if(pic==null)
-              Container(
-                alignment: Alignment.center,
-
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 12.0),
-                  child: TextButton(
-
-                    onPressed: () async {
+              if (pic == null)
+                Container(
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 12.0),
+                    child: TextButton(
+                      onPressed: () async {
                         await takePictureandResize();
                         setState(() {
                           pic = pic;
                         });
-                    },
-                    style: TextButton.styleFrom(
-                      splashFactory: NoSplash.splashFactory,
-                      foregroundColor: Colors.transparent,
-                      backgroundColor: Colors.transparent,
-                    ),
-                    child: Container(
-                      width: 60,
-                      height: 60,
-                      decoration: new BoxDecoration(
-                        shape: BoxShape.circle,
-
-                        border: Border.all(
-                          color: Colors.white,
-                          width: 6
-                        )
+                      },
+                      style: TextButton.styleFrom(
+                        splashFactory: NoSplash.splashFactory,
+                        foregroundColor: Colors.transparent,
+                        backgroundColor: Colors.transparent,
+                      ),
+                      child: Container(
+                        width: 60,
+                        height: 60,
+                        decoration: new BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 6)),
                       ),
                     ),
                   ),
                 ),
+              SizedBox(
+                height: 20,
               ),
-              SizedBox(height: 20,),
               if (pic != null)
-              Container(
-                height: 50,
-                alignment: Alignment.centerRight,
-                width: MediaQuery.of(context).size.width*.9,
-                child: TextButton.icon(
-                  onPressed: () async{
-                    if(pic == null){
-                      UITemplates.showErrorMessage(context, "Add a picture");
-                    }else{
-
-                      Navigator.of(context).push(
-                        CupertinoPageRoute(
-                          builder: (context) => ReviewDetailsView(pic: pic!,),
-                        ),
-                      );
-                    }
-
-                  },
-                  icon: Icon(Icons.arrow_forward_ios, color: Colors.white38,size: 30,),
-                  label: Text("Use it", style: UITemplates.buttonTextStyle),),
-              ),
-              SizedBox(height: 56,)
+                Container(
+                  height: 50,
+                  alignment: Alignment.centerRight,
+                  width: MediaQuery.of(context).size.width * .9,
+                  child: TextButton.icon(
+                    onPressed: () async {
+                      if (pic == null) {
+                        UITemplates.showErrorMessage(context, "Add a picture");
+                      } else {
+                        Navigator.of(context).push(
+                          CupertinoPageRoute(
+                            builder: (context) => ReviewDetailsView(
+                              pic: pic!,
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                    icon: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.white38,
+                      size: 30,
+                    ),
+                    label: Text("Use it", style: UITemplates.buttonTextStyle),
+                  ),
+                ),
+              SizedBox(
+                height: 56,
+              )
             ],
           ),
         ),
@@ -282,7 +294,6 @@ class _AddReviewState extends State<AddReview> {
   }
 
   Future<void> takePictureandResize() async {
-
     XFile xTemp = await camController!.takePicture();
     File compressedFile = await FlutterNativeImage.compressImage(
       xTemp.path,
@@ -304,7 +315,6 @@ class _AddReviewState extends State<AddReview> {
         enableAudio: false,
         ResolutionPreset.max,
         imageFormatGroup: ImageFormatGroup.bgra8888,
-
       );
 
       await camController!.initialize();
@@ -319,15 +329,13 @@ class _AddReviewState extends State<AddReview> {
     return false;
   }
 
-
-
   Future<File?> picImageFromLibrary() async {
     final ImagePicker picker = ImagePicker();
     XFile? temp;
     try {
       temp =
-      await picker.pickImage(source: ImageSource.gallery, imageQuality: 1);
-    }catch(e){
+          await picker.pickImage(source: ImageSource.gallery, imageQuality: 1);
+    } catch (e) {
       UITemplates.showErrorMessage(context, "You disabled library access");
       return null;
     }

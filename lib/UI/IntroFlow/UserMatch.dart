@@ -1,15 +1,11 @@
 import 'package:donde/BackendFunctions/GetFriends.dart';
-import 'package:donde/UI/BasicUIElements/ListTiles.dart';
 import 'package:donde/Classes/MyUser.dart';
-import 'package:donde/UI/IntroFlow/InviteFriends.dart';
+import 'package:donde/UI/BasicUIElements/ListTiles.dart';
 import 'package:donde/UI/IntroFlow/LocationPermissionView.dart';
-import 'package:donde/UI/MainViews/Skeleton.dart';
 import 'package:donde/UITemplates.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
-import 'package:geolocator/geolocator.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UserMatch extends StatefulWidget {
   @override
@@ -27,7 +23,6 @@ class _UserMatchState extends State<UserMatch> {
     super.initState();
     getFriends("");
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +50,8 @@ class _UserMatchState extends State<UserMatch> {
                           initialItemCount: users.length,
                           itemBuilder: (context, index, animation) {
                             MyUser user = users[index];
-                            return ListTiles.userListTile(user, context, action: action);
+                            return ListTiles.userListTile(user, context,
+                                action: action);
                           },
                         ),
                       ),
@@ -67,7 +63,6 @@ class _UserMatchState extends State<UserMatch> {
                   width: MediaQuery.of(context).size.width * .7,
                   height: 50,
                   child: TextButton(
-
                     onPressed: () {
                       FirebaseAnalytics.instance
                           .logEvent(name: "exit_user_match");
@@ -94,13 +89,11 @@ class _UserMatchState extends State<UserMatch> {
     });
   }
 
-  Future<void> action()async{
+  Future<void> action() async {
     List<MyUser> newUsers = await GetFriends.getFriendsFromContact("");
     newUsers.removeWhere((element) => users.contains(element as MyUser));
     int histLength = users.length;
     users.addAll(newUsers);
     animListKey.currentState?.insertAllItems(histLength, newUsers.length);
   }
-
-
 }

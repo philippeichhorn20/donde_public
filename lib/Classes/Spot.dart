@@ -1,13 +1,10 @@
-import 'dart:convert';
-
 import 'package:donde/BackendFunctions/LocationServices.dart';
 import 'package:donde/Classes/RawSpot.dart';
 import 'package:donde/Classes/Review.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
-class Spot extends RawSpot{
+class Spot extends RawSpot {
   List<Review> reviews = [];
   String name;
   int likes;
@@ -23,9 +20,8 @@ class Spot extends RawSpot{
   Spot(this.name, this.likes, this.dislikes, this.adress, this.description,
       this.type);
 
-  static Spot adSpot(){
-    Spot spot =   Spot("", 0, 0, "", "",
-        SpotTypes.Spot);
+  static Spot adSpot() {
+    Spot spot = Spot("", 0, 0, "", "", SpotTypes.Spot);
     spot.isAd = true;
     return spot;
   }
@@ -57,7 +53,8 @@ class Spot extends RawSpot{
       print(e);
     }
 
-    spot.latlong = Location(latitude: spot.lat!, longitude: spot.long!, timestamp: DateTime.now());
+    spot.latlong = Location(
+        latitude: spot.lat!, longitude: spot.long!, timestamp: DateTime.now());
 
     return spot;
   }
@@ -85,14 +82,14 @@ class Spot extends RawSpot{
 
   String getDistance() {
     print(this.adress);
-    Location loc =
-        Location(latitude: lat??0, longitude: long??0, timestamp: DateTime.now());
+    Location loc = Location(
+        latitude: lat ?? 0, longitude: long ?? 0, timestamp: DateTime.now());
     return LocationServices.getDistance(loc);
   }
 
   int getDistanceNum() {
     Location loc =
-    Location(latitude: lat!, longitude: long!, timestamp: DateTime.now());
+        Location(latitude: lat!, longitude: long!, timestamp: DateTime.now());
     return LocationServices.getDistanceNum(loc);
   }
 

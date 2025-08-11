@@ -1,8 +1,8 @@
 import 'package:donde/BackendFunctions/GetFriends.dart';
 import 'package:donde/BackendFunctions/Linking.dart';
+import 'package:donde/Classes/MyUser.dart';
 import 'package:donde/Store.dart';
 import 'package:donde/UI/BasicUIElements/ListTiles.dart';
-import 'package:donde/Classes/MyUser.dart';
 import 'package:donde/UI/Settings/SettingsMain.dart';
 import 'package:donde/UITemplates.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,25 +24,27 @@ class _SearchUserViewState extends State<SearchUserView> {
     super.initState();
     callFunction();
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-     // color: Colors.grey[850],
+      // color: Colors.grey[850],
       child: Column(
         children: [
-          SizedBox(height: 60,),
+          SizedBox(
+            height: 60,
+          ),
           Row(
             children: [
               Expanded(child: SizedBox()),
               Container(
-                width:MediaQuery.of(context).size.width*.75,
+                width: MediaQuery.of(context).size.width * .75,
                 child: TextField(
                   controller: searchText,
                   cursorColor: Colors.black,
                   style: UITemplates.settingsTextStyle,
                   autofocus: true,
                   decoration: InputDecoration(
-
                     fillColor: Colors.grey[700],
                     hintText: "Find users",
                     hintStyle: UITemplates.settingsTextStyle,
@@ -54,8 +56,8 @@ class _SearchUserViewState extends State<SearchUserView> {
                   onSubmitted: (value) {
                     callFunction();
                   },
-                  onChanged: (text){
-                    if(text.length%2==0){
+                  onChanged: (text) {
+                    if (text.length % 2 == 0) {
                       callFunction();
                     }
                   },
@@ -69,42 +71,52 @@ class _SearchUserViewState extends State<SearchUserView> {
                       ),
                     );
                   },
-
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,
                     elevation: 0,
                   ),
-                  child: Icon(Icons.settings, size: 28,))
+                  child: Icon(
+                    Icons.settings,
+                    size: 28,
+                  ))
             ],
           ),
-
           Container(
             margin: EdgeInsets.all(10),
             decoration: BoxDecoration(
                 color: Colors.green[700],
-
-                borderRadius: BorderRadius.all(Radius.circular(10))
-            ),
-
+                borderRadius: BorderRadius.all(Radius.circular(10))),
             width: MediaQuery.of(context).size.width,
             child: ListTile(
-
-              onTap: ()async{
+              onTap: () async {
                 String link = await Linking.createLinkToUser();
                 await Share.share(link);
               },
-
-              leading: Icon(Icons.ios_share, size: 30,),
-              title: Text("Invite friends", style: UITemplates.settingsTextStyle,),
-              subtitle: Text(Store.me.uniqueUsername??Store.me.username, style: UITemplates.reviewNoteStyle,),
+              leading: Icon(
+                Icons.ios_share,
+                size: 30,
+              ),
+              title: Text(
+                "Invite friends",
+                style: UITemplates.settingsTextStyle,
+              ),
+              subtitle: Text(
+                Store.me.uniqueUsername ?? Store.me.username,
+                style: UITemplates.reviewNoteStyle,
+              ),
             ),
-
           ),
           Container(
             alignment: Alignment.centerLeft,
             child: Padding(
-              padding: const EdgeInsets.only(left:12.0, top: 5,bottom: 5) ,
-              child: Text(searchText.text.isEmpty?"Our recommendations":"Your search results", style: UITemplates.descriptionStyle,textAlign: TextAlign.start,),
+              padding: const EdgeInsets.only(left: 12.0, top: 5, bottom: 5),
+              child: Text(
+                searchText.text.isEmpty
+                    ? "Our recommendations"
+                    : "Your search results",
+                style: UITemplates.descriptionStyle,
+                textAlign: TextAlign.start,
+              ),
             ),
           ),
           Flexible(
@@ -128,8 +140,7 @@ class _SearchUserViewState extends State<SearchUserView> {
     );
   }
 
-
-   Future<void> callFunction()async{
+  Future<void> callFunction() async {
     users = await GetFriends.getUserFromString(searchText.text);
     setState(() {
       users = users;

@@ -3,11 +3,9 @@ import 'package:donde/BackendFunctions/RelationshipFunctions.dart';
 import 'package:donde/Classes/MyUser.dart';
 import 'package:donde/UI/IntroFlow/LogIn.dart';
 import 'package:donde/UI/IntroFlow/SignUp.dart';
-import 'package:donde/Store.dart';
 import 'package:donde/UITemplates.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -41,7 +39,6 @@ class _WelcomeState extends State<Welcome> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
@@ -55,13 +52,16 @@ class _WelcomeState extends State<Welcome> {
               Container(
                 width: MediaQuery.of(context).size.width,
                 child: Center(
-                  child: Image.asset('assets/donde.png', width: MediaQuery.of(context).size.width*.7, ),
+                  child: Image.asset(
+                    'assets/donde.png',
+                    width: MediaQuery.of(context).size.width * .7,
+                  ),
                 ),
               ),
             ],
           ),
           Positioned(
-            top: MediaQuery.of(context).size.height*.4,
+            top: MediaQuery.of(context).size.height * .4,
             child: Container(
               width: MediaQuery.of(context).size.width * 0.8,
               child: TextField(
@@ -94,28 +94,33 @@ class _WelcomeState extends State<Welcome> {
             ),
           ),
           TextButton(
-              style:  TextButton.styleFrom(
+              style: TextButton.styleFrom(
                 splashFactory: NoSplash.splashFactory,
                 foregroundColor: Colors.transparent,
               ),
-              onPressed: (){
-            friendInput.text = "05d35495-26fc-4077-b2ae-36c8c73252e5";
-            checkInput(friendInput.text);
-          }, child: Text("Test", style: TextStyle(color: Colors.transparent),)),
+              onPressed: () {
+                friendInput.text = "05d35495-26fc-4077-b2ae-36c8c73252e5";
+                checkInput(friendInput.text);
+              },
+              child: Text(
+                "Test",
+                style: TextStyle(color: Colors.transparent),
+              )),
           Positioned(
-            top: MediaQuery.of(context).size.height*.75,
+            top: MediaQuery.of(context).size.height * .75,
             child: Column(
               children: [
                 Container(
                   width: MediaQuery.of(context).size.width * .7,
                   child: TextButton(
-                    style:  TextButton.styleFrom(
+                    style: TextButton.styleFrom(
                       splashFactory: NoSplash.splashFactory,
                       foregroundColor: Colors.transparent,
                     ),
                     child: Text(
                       "By signing up, you agree to our Terms of Service and Privacy Policy",
-                      style: TextStyle(color: Colors.white60,fontWeight : FontWeight.w700),
+                      style: TextStyle(
+                          color: Colors.white60, fontWeight: FontWeight.w700),
                       textAlign: TextAlign.center,
                     ),
                     onPressed: () {
@@ -149,7 +154,7 @@ class _WelcomeState extends State<Welcome> {
                 ),
                 Center(
                   child: TextButton(
-                    style:  TextButton.styleFrom(
+                    style: TextButton.styleFrom(
                       splashFactory: NoSplash.splashFactory,
                       foregroundColor: Colors.transparent,
                     ),
@@ -190,7 +195,8 @@ class _WelcomeState extends State<Welcome> {
   }
 
   Future<void> initLinkSearch() async {
-    FirebaseDynamicLinks.instance.onLink.listen((PendingDynamicLinkData data) async{
+    FirebaseDynamicLinks.instance.onLink
+        .listen((PendingDynamicLinkData data) async {
       final Uri? deepLink = data?.link;
       if (deepLink != null) {
         print("deep link");
@@ -201,8 +207,6 @@ class _WelcomeState extends State<Welcome> {
           checkInput(friendInput.text);
         }
       }
-
-    }
-    );
+    });
   }
 }

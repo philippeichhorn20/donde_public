@@ -1,13 +1,13 @@
 import 'package:donde/BackendFunctions/FriendRelationshipGroups.dart';
 import 'package:donde/BackendFunctions/GetFriends.dart';
-import 'package:donde/UI/BasicUIElements/ListTiles.dart';
 import 'package:donde/Classes/MyUser.dart';
+import 'package:donde/UI/BasicUIElements/ListTiles.dart';
 import 'package:donde/UITemplates.dart';
 import 'package:flutter/material.dart';
 
 class ContactView extends StatefulWidget {
-
   final ContactTypes type;
+
   const ContactView(this.type);
 
   @override
@@ -17,32 +17,32 @@ class ContactView extends StatefulWidget {
 class _ContactViewState extends State<ContactView> {
   List<MyUser> users = [];
   bool loading = false;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getUsers(widget.type);
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
-
           resizeToAvoidBottomInset: false,
-
           appBar: UITemplates.appbar(contacttypesToName(widget.type)),
           body: Stack(
             alignment: Alignment.center,
             children: [
               RefreshIndicator(
-                onRefresh: ()async {
+                onRefresh: () async {
                   await getUsers(widget.type);
                 },
                 color: Colors.black,
-                child:  ListView.builder(
+                child: ListView.builder(
                   itemCount: users.length == 0 && !loading ? 1 : users.length,
                   itemBuilder: (context, index) {
-                    if(users.length == 0 && !loading){
+                    if (users.length == 0 && !loading) {
                       return Center(
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -60,7 +60,8 @@ class _ContactViewState extends State<ContactView> {
                                 style: UITemplates.buttonTextStyle,
                                 textAlign: TextAlign.center,
                               ),
-                            ]),);
+                            ]),
+                      );
                     }
                     MyUser user = users[index];
                     return ListTiles.userListTile(user, context);
@@ -68,28 +69,27 @@ class _ContactViewState extends State<ContactView> {
                 ),
               ),
             ],
-          )
-      ),
+          )),
     );
   }
 
-  Future<void> getUsers(ContactTypes type)async{
+  Future<void> getUsers(ContactTypes type) async {
     setState(() {
       loading = true;
     });
-    switch (type){
+    switch (type) {
       case ContactTypes.REQUESTS:
-        users =  await FriendRelationshipGroups.getRequestingUsers();
+        users = await FriendRelationshipGroups.getRequestingUsers();
         break;
       case ContactTypes.FRIENDS:
-        users =  await FriendRelationshipGroups.getFriends();
+        users = await FriendRelationshipGroups.getFriends();
         break;
       case ContactTypes.PROPOSALS:
-        users =  await GetFriends.getFriendsFromContact("");
+        users = await GetFriends.getFriendsFromContact("");
         break;
-        case ContactTypes.MY_REQUESTS:
-      users =  await FriendRelationshipGroups.getPeopleIRequested();
-      break;
+      case ContactTypes.MY_REQUESTS:
+        users = await FriendRelationshipGroups.getPeopleIRequested();
+        break;
     }
     setState(() {
       users = users;
@@ -97,11 +97,8 @@ class _ContactViewState extends State<ContactView> {
     });
   }
 
-
-  static String contacttypesToName(ContactTypes type){
-
-    switch (type){
-
+  static String contacttypesToName(ContactTypes type) {
+    switch (type) {
       case ContactTypes.REQUESTS:
         return "Open Requests";
         break;
@@ -118,7 +115,4 @@ class _ContactViewState extends State<ContactView> {
   }
 }
 
-
-enum ContactTypes{
-  REQUESTS, FRIENDS, PROPOSALS, MY_REQUESTS
-}
+enum ContactTypes { REQUESTS, FRIENDS, PROPOSALS, MY_REQUESTS }

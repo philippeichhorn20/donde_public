@@ -5,7 +5,6 @@ import 'package:donde/UITemplates.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-
 class ChangeUsername extends StatefulWidget {
   const ChangeUsername({Key? key}) : super(key: key);
 
@@ -14,8 +13,10 @@ class ChangeUsername extends StatefulWidget {
 }
 
 class _ChangeUsernameState extends State<ChangeUsername> {
-  TextEditingController usernameControl = TextEditingController(text: Store.me.username);
-  TextEditingController uusernameControl = TextEditingController(text: Store.me.uniqueUsername);
+  TextEditingController usernameControl =
+      TextEditingController(text: Store.me.username);
+  TextEditingController uusernameControl =
+      TextEditingController(text: Store.me.uniqueUsername);
   WaitingStates uniqueness = WaitingStates.UNIQUE;
   bool changed = false;
 
@@ -23,7 +24,6 @@ class _ChangeUsernameState extends State<ChangeUsername> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
   }
 
   @override
@@ -32,12 +32,13 @@ class _ChangeUsernameState extends State<ChangeUsername> {
       appBar: UITemplates.appbar("Change username"),
       body: Column(
         children: [
-          SizedBox(height: 40,),
+          SizedBox(
+            height: 40,
+          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               cursorColor: Colors.black,
-
               autofocus: true,
               controller: usernameControl,
               style: UITemplates.importantTextStyle,
@@ -46,14 +47,15 @@ class _ChangeUsernameState extends State<ChangeUsername> {
               decoration: InputDecoration(
                 hintText: "Name",
                 helperText: "Display name",
-
                 hintStyle: UITemplates.importantTextStyleHint,
                 border: InputBorder.none,
                 focusedBorder: InputBorder.none,
               ),
             ),
           ),
-          SizedBox(height: 30,),
+          SizedBox(
+            height: 30,
+          ),
           Padding(
             //uniqueUsername
             padding: const EdgeInsets.all(8.0),
@@ -66,36 +68,58 @@ class _ChangeUsernameState extends State<ChangeUsername> {
                 checkUniqueness();
               },
               inputFormatters: [
-                FilteringTextInputFormatter.deny(
-                    RegExp(r'\s')),
+                FilteringTextInputFormatter.deny(RegExp(r'\s')),
               ],
               decoration: InputDecoration(
                 hintText: "Username",
                 helperText: "Unique username",
-                suffixIcon: uniqueness == WaitingStates.LOADING?Container(child: UITemplates.loadingAnimation, width: 30,):uniqueness==WaitingStates.UNIQUE?Icon(Icons.done):Icon(Icons.close),
-                suffixIconColor:uniqueness==WaitingStates.UNIQUE?Colors.green:Colors.red,
+                suffixIcon: uniqueness == WaitingStates.LOADING
+                    ? Container(
+                        child: UITemplates.loadingAnimation,
+                        width: 30,
+                      )
+                    : uniqueness == WaitingStates.UNIQUE
+                        ? Icon(Icons.done)
+                        : Icon(Icons.close),
+                suffixIconColor: uniqueness == WaitingStates.UNIQUE
+                    ? Colors.green
+                    : Colors.red,
                 hintStyle: UITemplates.importantTextStyleHint,
                 border: InputBorder.none,
                 focusedBorder: InputBorder.none,
               ),
             ),
           ),
-          SizedBox(height: MediaQuery.of(context).size.height*.1,),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * .1,
+          ),
           Container(
-            width: MediaQuery.of(context).size.width*.7,
+            width: MediaQuery.of(context).size.width * .7,
             height: 50,
             child: ElevatedButton(
-              child: Text(changed ? "Changed!":"Change", style: UITemplates.buttonTextStyle,),
+              child: Text(
+                changed ? "Changed!" : "Change",
+                style: UITemplates.buttonTextStyle,
+              ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: uniqueness == WaitingStates.UNIQUE?Colors.green:Colors.black,
+                backgroundColor: uniqueness == WaitingStates.UNIQUE
+                    ? Colors.green
+                    : Colors.black,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(40),
-                ),),
-              onPressed: ()async{
-                if(uniqueness == WaitingStates.UNIQUE && (uusernameControl.text != Store.me.uniqueUsername||usernameControl.text != Store.me.username)){
+                ),
+              ),
+              onPressed: () async {
+                if (uniqueness == WaitingStates.UNIQUE &&
+                    (uusernameControl.text != Store.me.uniqueUsername ||
+                        usernameControl.text != Store.me.username)) {
                   await saveChanges();
-                }else{
-                  UITemplates.showErrorMessage(context, uniqueness == WaitingStates.UNIQUE? "Please change your name first":"Your username is taken already");
+                } else {
+                  UITemplates.showErrorMessage(
+                      context,
+                      uniqueness == WaitingStates.UNIQUE
+                          ? "Please change your name first"
+                          : "Your username is taken already");
                 }
               },
             ),
@@ -105,41 +129,40 @@ class _ChangeUsernameState extends State<ChangeUsername> {
     );
   }
 
-
-
-  Future<void> checkUniqueness()async{
+  Future<void> checkUniqueness() async {
     setState(() {
       changed = false;
     });
-    if(uusernameControl.text == Store.me.uniqueUsername){
+    if (uusernameControl.text == Store.me.uniqueUsername) {
       setState(() {
         uniqueness = WaitingStates.UNIQUE;
       });
-    }else{
+    } else {
       setState(() {
         uniqueness = WaitingStates.LOADING;
       });
       bool uniquenessBool;
-      if(uusernameControl.text.length > 0){
-        uniquenessBool = await SignUpFunctions.checkUniqueness(uusernameControl.text);
-      }else{
+      if (uusernameControl.text.length > 0) {
+        uniquenessBool =
+            await SignUpFunctions.checkUniqueness(uusernameControl.text);
+      } else {
         uniquenessBool = false;
       }
       setState(() {
-        if(uniquenessBool){
+        if (uniquenessBool) {
           uniqueness = WaitingStates.UNIQUE;
-        }else{
+        } else {
           uniqueness = WaitingStates.NOT_UNIQUE;
-
         }
       });
     }
   }
 
-
-  Future<void> saveChanges()async{
-    if(uusernameControl.text != Store.me.uniqueUsername||usernameControl.text != Store.me.username){
-      bool success  = await SignUpFunctions.changeDetails(uusernameControl.text, usernameControl.text);
+  Future<void> saveChanges() async {
+    if (uusernameControl.text != Store.me.uniqueUsername ||
+        usernameControl.text != Store.me.username) {
+      bool success = await SignUpFunctions.changeDetails(
+          uusernameControl.text, usernameControl.text);
       setState(() {
         changed = success;
       });
@@ -148,7 +171,5 @@ class _ChangeUsernameState extends State<ChangeUsername> {
     setState(() {
       Store.me = Store.me;
     });
-
   }
-
 }
