@@ -11,8 +11,6 @@ class ChooseSpotView extends StatefulWidget {
 class _ChooseSpotViewState extends State<ChooseSpotView> {
   TextEditingController inputControl = TextEditingController();
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +29,4 @@ class _ChooseSpotViewState extends State<ChooseSpotView> {
       ),
     );
   }
-
-
-
 }

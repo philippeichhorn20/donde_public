@@ -4,9 +4,7 @@ import 'package:donde/Classes/MyUser.dart';
 import 'package:donde/Store.dart';
 import 'package:donde/UI/BasicUIElements/ListTiles.dart';
 import 'package:donde/UI/IntroFlow/UserMatch.dart';
-import 'package:donde/UI/MainViews/Skeleton.dart';
 import 'package:donde/UITemplates.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
@@ -14,7 +12,9 @@ import 'package:share_plus/share_plus.dart';
 
 class ContactShareView extends StatefulWidget {
   final bool isOutsideIntroFlow;
-  const ContactShareView({Key? key, required this.isOutsideIntroFlow}) : super(key: key);
+
+  const ContactShareView({Key? key, required this.isOutsideIntroFlow})
+      : super(key: key);
 
   @override
   State<ContactShareView> createState() => _ContactShareViewState();
@@ -40,11 +40,11 @@ class _ContactShareViewState extends State<ContactShareView> {
       children: [
         if (users.isEmpty && isChecked)
           Positioned(
-            top: MediaQuery.of(context).size.height*.3,
+            top: MediaQuery.of(context).size.height * .3,
             child: ElevatedButton(
               onPressed: () async {
-                if(Store.myInviteLink == null){
-                  Store.myInviteLink  = await Linking.createLinkToUser();
+                if (Store.myInviteLink == null) {
+                  Store.myInviteLink = await Linking.createLinkToUser();
                 }
                 await Share.share(Store.myInviteLink!);
               },
@@ -143,8 +143,13 @@ class _ContactShareViewState extends State<ContactShareView> {
                     width: MediaQuery.of(context).size.width,
                     alignment: Alignment.centerLeft,
                     child: Padding(
-                      padding: const EdgeInsets.only(left:12.0, top: 5,bottom: 5) ,
-                      child: Text("From your contacts", style: UITemplates.descriptionStyle,textAlign: TextAlign.start,),
+                      padding:
+                          const EdgeInsets.only(left: 12.0, top: 5, bottom: 5),
+                      child: Text(
+                        "From your contacts",
+                        style: UITemplates.descriptionStyle,
+                        textAlign: TextAlign.start,
+                      ),
                     ),
                   ),
                 if (users.isNotEmpty && isChecked)
@@ -186,34 +191,31 @@ class _ContactShareViewState extends State<ContactShareView> {
                   );
                 },
               )),
-        if(!widget.isOutsideIntroFlow||!isChecked)
-        Positioned(
-            bottom: 80,
-            child: Container(
-              width: MediaQuery.of(context).size.width * .7,
-              height: 50,
-              child: TextButton(
-                onPressed: () async {
-                  if (!isChecked) {
-                    return await getContacts();
-                  }
-                  Navigator.of(context).pushReplacement(
-                    CupertinoPageRoute(
-                      builder: (context) => UserMatch(),
-                    ),
-                  );
-                  //Todo nach invite friends
-                },
-                child: Text(isChecked ? "Next" : "Check",
-                    style: UITemplates.buttonTextStyle),
-                style: UITemplates.buttonStyle,
-              ),
-            )),
-        if(widget.isOutsideIntroFlow)
-        Positioned(
-            top: 10,
-            left: 0,
-            child: UITemplates.goBackArrow(context)),
+        if (!widget.isOutsideIntroFlow || !isChecked)
+          Positioned(
+              bottom: 80,
+              child: Container(
+                width: MediaQuery.of(context).size.width * .7,
+                height: 50,
+                child: TextButton(
+                  onPressed: () async {
+                    if (!isChecked) {
+                      return await getContacts();
+                    }
+                    Navigator.of(context).pushReplacement(
+                      CupertinoPageRoute(
+                        builder: (context) => UserMatch(),
+                      ),
+                    );
+                    //Todo nach invite friends
+                  },
+                  child: Text(isChecked ? "Next" : "Check",
+                      style: UITemplates.buttonTextStyle),
+                  style: UITemplates.buttonStyle,
+                ),
+              )),
+        if (widget.isOutsideIntroFlow)
+          Positioned(top: 10, left: 0, child: UITemplates.goBackArrow(context)),
       ],
     ));
   }

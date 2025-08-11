@@ -7,17 +7,12 @@ import 'package:donde/Classes/Review.dart';
 import 'package:donde/Classes/Spot.dart';
 import 'package:donde/Store.dart';
 import 'package:donde/UI/BasicUIElements/ListTiles.dart';
-import 'package:donde/UI/CreateSpot/NewSpotLocation.dart';
-import 'package:donde/UI/MainViews/HomePage.dart';
-import 'package:donde/UI/MainViews/SpotView.dart';
 import 'package:donde/UI/ReviewFlow/AddReview.dart';
 import 'package:donde/UITemplates.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-
 import 'package:geocoding/geocoding.dart';
 
 class NewSpot extends StatefulWidget {
@@ -34,7 +29,7 @@ class _NewSpotState extends State<NewSpot> {
   TextEditingController nameControl = TextEditingController();
   TextEditingController descriptionControl = TextEditingController();
   TextEditingController searchText = TextEditingController();
-  SuggestionsBoxController suggControl = SuggestionsBoxController();
+  SuggestionsController suggControl = SuggestionsController();
   String adress = "";
   int spotTypeIndex = -1;
   Location? location;
@@ -49,7 +44,6 @@ class _NewSpotState extends State<NewSpot> {
     super.initState();
     nameControl.text = widget.name;
     FirebaseAnalytics.instance.logEvent(name: "creates review step 1");
-
   }
 
   @override
@@ -68,25 +62,32 @@ class _NewSpotState extends State<NewSpot> {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 30.0, left: 10,right:10),
+                  padding:
+                      const EdgeInsets.only(bottom: 30.0, left: 10, right: 10),
                   child: TypeAheadField(
+                    suggestionsCallback: (String pattern) {
+                      return getsTheSpots(pattern, false);
+                    },
                     animationDuration: Duration.zero,
                     debounceDuration: Duration.zero,
-                    suggestionsBoxController: suggControl,
+                    suggestionsController: suggControl,
                     loadingBuilder: (context) {
                       return UITemplates.loadingAnimation;
                     },
-                    animationStart: 0,
                     itemBuilder: (context, itemData) {
                       return ListTiles.spotListTile(itemData, context);
-                   },
+                    },
+                    onSelected: (value) {
+                      getsTheSpots(value, false);
+                    },
+                    controller: searchText,
+                    builder: (context, controller, focusNode) {
+                      return Container();
+                    },
+                    /*
                     textFieldConfiguration: TextFieldConfiguration(
-                      onSubmitted: (value) {
-                        getsTheSpots(value, false);
-                      },
                       autofocus: true,
                       cursorColor: Colors.black,
-                      controller: searchText,
                       decoration: InputDecoration(
                         suffixIcon: ElevatedButton(
                           child: Icon(Icons.close, color: Colors.white,),
@@ -111,6 +112,9 @@ class _NewSpotState extends State<NewSpot> {
                         enabledBorder: UITemplates.appBarInputBorder,
                       ),
                     ),
+                     */
+
+                    /*
                     suggestionsBoxDecoration: SuggestionsBoxDecoration(
                       elevation: 0,
                     ),
@@ -145,9 +149,7 @@ class _NewSpotState extends State<NewSpot> {
                         ),
                       );
                     },
-                    suggestionsCallback: (String pattern){
-                        return getsTheSpots(pattern, false);
-                      },
+
                 //    hideKeyboard: true,
                     hideSuggestionsOnKeyboardHide: false,
                     errorBuilder: (context, error) {
@@ -176,24 +178,28 @@ class _NewSpotState extends State<NewSpot> {
                         }
                       });
                     },
+                    */
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.only(left:20),
-                  alignment: Alignment.bottomLeft,
-                  child: Text("Choose the location you want to rate", style: UITemplates.descriptionStyle,textAlign: TextAlign.start,)
-                ),
+                    padding: EdgeInsets.only(left: 20),
+                    alignment: Alignment.bottomLeft,
+                    child: Text(
+                      "Choose the location you want to rate",
+                      style: UITemplates.descriptionStyle,
+                      textAlign: TextAlign.start,
+                    )),
                 Container(
-                  margin: EdgeInsets.only(bottom: 20, left: 15, right:15, top:10),
-                  padding: EdgeInsets.only(left:30, bottom: 20),
+                  margin:
+                      EdgeInsets.only(bottom: 20, left: 15, right: 15, top: 10),
+                  padding: EdgeInsets.only(left: 30, bottom: 20),
                   decoration: BoxDecoration(
                       color: Colors.black12,
-                      borderRadius: BorderRadius.all(Radius.circular(10))
-                  ),
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(right:25.0),
+                        padding: const EdgeInsets.only(right: 25.0),
                         child: TextField(
                           controller: nameControl,
                           cursorColor: Colors.black,
@@ -203,7 +209,7 @@ class _NewSpotState extends State<NewSpot> {
                                 color: Colors.grey,
                               ),
                             ),
-                            focusedBorder:  UnderlineInputBorder(
+                            focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(
                                 color: Colors.white,
                               ),
@@ -218,35 +224,44 @@ class _NewSpotState extends State<NewSpot> {
                           },
                         ),
                       ),
-                      if(adress != null && adress != "")
+                      if (adress != null && adress != "")
                         Container(
                             alignment: Alignment.centerLeft,
-                            padding: EdgeInsets.only(top:20, bottom: 20),
-                            child: Text(adress, style: UITemplates.descriptionStyle,textAlign: TextAlign.start,)),
-                      if(adress == "")
+                            padding: EdgeInsets.only(top: 20, bottom: 20),
+                            child: Text(
+                              adress,
+                              style: UITemplates.descriptionStyle,
+                              textAlign: TextAlign.start,
+                            )),
+                      if (adress == "")
                         Container(
                             alignment: Alignment.centerLeft,
-                            padding: EdgeInsets.only(top:20, bottom: 20),
-                            child: Text("Find the location", style: UITemplates.descriptionStyle,textAlign: TextAlign.start,)),
+                            padding: EdgeInsets.only(top: 20, bottom: 20),
+                            child: Text(
+                              "Find the location",
+                              style: UITemplates.descriptionStyle,
+                              textAlign: TextAlign.start,
+                            )),
                       Container(
                         alignment: Alignment.centerLeft,
                         child: Wrap(
-                          alignment: WrapAlignment.start,
+                            alignment: WrapAlignment.start,
                             spacing: 5,
                             children: List<Widget>.generate(
                               SpotTypes.values.length,
-                                  (index) {
+                              (index) {
                                 return ChoiceChip(
                                   padding: EdgeInsets.zero,
                                   label: Text(SpotTypes.values[index].name),
                                   selected: index == spotTypeIndex,
                                   onSelected: ((value) {
-                                    if(id == null){
+                                    if (id == null) {
                                       setState(() {
                                         spotTypeIndex = index;
                                       });
-                                    }else{
-                                      UITemplates.showErrorMessage(context, "This location has already been used and therefore cannot be edited");
+                                    } else {
+                                      UITemplates.showErrorMessage(context,
+                                          "This location has already been used and therefore cannot be edited");
                                     }
                                   }),
                                   selectedColor: Colors.black45,
@@ -265,31 +280,37 @@ class _NewSpotState extends State<NewSpot> {
                   child: TextButton(
                     style: UITemplates.buttonStyle,
                     onPressed: () async {
-                      if(!isUploading){
+                      if (!isUploading) {
                         setState(() {
                           isUploading = true;
                         });
-                      if (!await save()) {
-                        UITemplates.showErrorMessage(context, "Add all the details");
-                      } else {
-                       // Navigator.popUntil(context, (route) => !route.hasActiveRouteBelow);
-                        Navigator.of(context).popUntil((route) => route.isFirst);
-                        Navigator.of(context).pushReplacement(
-                          CupertinoPageRoute(
-                            builder: (context) => AddReview(),
-                          ),
-                        );
+                        if (!await save()) {
+                          UITemplates.showErrorMessage(
+                              context, "Add all the details");
+                        } else {
+                          // Navigator.popUntil(context, (route) => !route.hasActiveRouteBelow);
+                          Navigator.of(context)
+                              .popUntil((route) => route.isFirst);
+                          Navigator.of(context).pushReplacement(
+                            CupertinoPageRoute(
+                              builder: (context) => AddReview(),
+                            ),
+                          );
 
+                          setState(() {
+                            Store.pers_controller!.index = 0;
+                          });
+                        }
                         setState(() {
-                          Store.pers_controller!.index = 0;
+                          isUploading = false;
                         });
                       }
-                      setState(() {
-                        isUploading = false;
-                      });
-                      }
                     },
-                    child: isUploading ? Center(child: UITemplates.loadingAnimation,):Text("Post!", style: UITemplates.buttonTextStyle),
+                    child: isUploading
+                        ? Center(
+                            child: UITemplates.loadingAnimation,
+                          )
+                        : Text("Post!", style: UITemplates.buttonTextStyle),
                   ),
                 )
               ],
@@ -300,26 +321,27 @@ class _NewSpotState extends State<NewSpot> {
     );
   }
 
+  List<RawSpot> spots = [];
 
-
-
-List<RawSpot> spots = [];
-  Future<List<RawSpot>> getsTheSpots(String str, bool isTypeahead)async{
+  Future<List<RawSpot>> getsTheSpots(String str, bool isTypeahead) async {
     print("here");
 
-
-    if(str == ""){
-      spots = (await SpotFunctions.getallspotsnearyou(Store.position!.latitude, Store.position!.longitude)).reversed.toList();
-    }else{
+    if (str == "") {
+      spots = (await SpotFunctions.getallspotsnearyou(
+              Store.position!.latitude, Store.position!.longitude))
+          .reversed
+          .toList();
+    } else {
       spots = (await SpotFunctions.fulltextspotsearch(str)).reversed.toList();
     }
     RawSpot? here = await LocationServices.getAdressOfCurrentLocation();
-    if(here != null){
+    if (here != null) {
       spots.insert(0, here);
     }
     print("str: ${str}");
-    if(spots.length < 3){
-      spots.addAll((await TomTomSpotSearch.getSpots(isTypeahead, str.replaceAll(",", ""))));
+    if (spots.length < 3) {
+      spots.addAll((await TomTomSpotSearch.getSpots(
+          isTypeahead, str.replaceAll(",", ""))));
     }
     setState(() {
       spots = spots;
@@ -327,23 +349,25 @@ List<RawSpot> spots = [];
     return spots;
   }
 
-
-  Future<bool> save()async{
-
-    if(adress == "" || spotTypeIndex == -1 ||nameControl.text.isEmpty ||location == null ){
+  Future<bool> save() async {
+    if (adress == "" ||
+        spotTypeIndex == -1 ||
+        nameControl.text.isEmpty ||
+        location == null) {
       return false;
     }
 
-    Spot spot = Spot(nameControl.text,0,0,adress,"",SpotTypes.values[spotTypeIndex]);
+    Spot spot = Spot(
+        nameControl.text, 0, 0, adress, "", SpotTypes.values[spotTypeIndex]);
     spot.latlong = location;
     spot.lat = location!.latitude;
     spot.long = location!.longitude;
-    if(id == null){
-      if(!await SpotFunctions.saveSpot(spot)){
+    if (id == null) {
+      if (!await SpotFunctions.saveSpot(spot)) {
         print("here2");
         return false;
       }
-    }else{
+    } else {
       spot.id = id;
     }
     widget.review.spot = spot;

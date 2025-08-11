@@ -1,10 +1,8 @@
 import 'dart:io';
 
 import 'package:donde/Classes/Review.dart';
-import 'package:donde/Classes/Spot.dart';
 import 'package:donde/Store.dart';
 import 'package:donde/UI/CreateSpot/NewSpot.dart';
-import 'package:donde/UI/ReviewFlow/DoesSpotExistView.dart';
 import 'package:donde/UITemplates.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,6 +13,7 @@ import 'package:profanity_filter/profanity_filter.dart';
 
 class ReviewDetailsView extends StatefulWidget {
   final File pic;
+
   const ReviewDetailsView({Key? key, required this.pic}) : super(key: key);
 
   @override
@@ -43,7 +42,6 @@ class _ReviewDetailsViewState extends State<ReviewDetailsView> {
       ),
       body: Container(
         child: SingleChildScrollView(
-
           child: Column(
             children: [
               Container(
@@ -80,7 +78,7 @@ class _ReviewDetailsViewState extends State<ReviewDetailsView> {
                 ),
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height*.05,
+                height: MediaQuery.of(context).size.height * .05,
               ),
               Container(
                   padding: EdgeInsets.only(left: 30, top: 20, bottom: 10),
@@ -99,7 +97,7 @@ class _ReviewDetailsViewState extends State<ReviewDetailsView> {
                     borderRadius: BorderRadius.all(Radius.circular(40))),
                 child: RatingBar(
                   ratingWidget: UITemplates.ratingBarItem,
-glow: false,
+                  glow: false,
                   itemPadding: EdgeInsets.only(left: 10, right: 10),
                   allowHalfRating: false,
                   onRatingUpdate: (value) async {
@@ -107,7 +105,9 @@ glow: false,
                   },
                 ),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height*.25,),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * .25,
+              ),
               Container(
                 height: 50,
                 width: MediaQuery.of(context).size.width * .8,
@@ -120,7 +120,7 @@ glow: false,
                     } else if (rating == null) {
                       UITemplates.showErrorMessage(
                           context, "Leave a rating between 0 and 5");
-                    }else if (filter.hasProfanity(textControl.text)) {
+                    } else if (filter.hasProfanity(textControl.text)) {
                       UITemplates.showErrorMessage(
                           context, "Do not use bad language");
                     } else {
@@ -130,7 +130,9 @@ glow: false,
                   child: Text("next", style: UITemplates.buttonTextStyle),
                 ),
               ),
-              SizedBox(height: 56,)
+              SizedBox(
+                height: 56,
+              )
             ],
           ),
         ),
@@ -138,13 +140,13 @@ glow: false,
     );
   }
 
-  void moveOn() async{
+  void moveOn() async {
     Review review = Review(textControl.text, Store.me, null, rating);
     review.textColor = 0;
     review.image = widget.pic;
-    try{
+    try {
       review.pic = await widget.pic.readAsBytes();
-    }catch(e){
+    } catch (e) {
       print(e);
     }
     Navigator.of(context).push(

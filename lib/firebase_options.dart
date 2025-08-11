@@ -63,7 +63,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1014389239818',
     projectId: 'donde-919c8',
     storageBucket: 'donde-919c8.appspot.com',
-    iosClientId: '1014389239818-1dl6071grlcarja2uge4sq9f9kv073mu.apps.googleusercontent.com',
+    iosClientId:
+        '1014389239818-1dl6071grlcarja2uge4sq9f9kv073mu.apps.googleusercontent.com',
     iosBundleId: 'com.eichhorn.donde',
   );
 }
