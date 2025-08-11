@@ -3,7 +3,7 @@ import 'package:donde/Store.dart';
 import 'package:donde/UI/IntroFlow/NoConnectionView.dart';
 import 'package:donde/UI/IntroFlow/Welcome.dart';
 import 'package:donde/UI/MainViews/Skeleton.dart';
-import 'package:donde/firebase_options.dart';
+import 'package:donde/connectionDetails/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
